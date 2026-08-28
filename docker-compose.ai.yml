@@ -1,0 +1,79 @@
+version: '3.8'
+services:
+  node-app:
+    build: ./node-app
+    env_file:
+      - ./node-app/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - vosk
+      - rasa
+      - llm-runner
+      - tts-service
+    networks:
+      - opennet
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: oss_user
+      POSTGRES_PASSWORD: oss_pass
+      POSTGRES_DB: openstore
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - opennet
+
+  vosk:
+    image: alphacep/kaldi-vosk-server:latest
+    environment:
+      - VOSK_MODEL=en-us
+    ports:
+      - "2700:2700"
+    networks:
+      - opennet
+
+  coqui-tts:
+    image: coqui/tts:latest
+    container_name: coqui-tts
+    ports:
+      - "5002:5002"
+    networks:
+      - opennet
+
+  rasa:
+    build: ./rasa
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./rasa:/app
+    networks:
+      - opennet
+
+  llm-runner:
+    build: ./llm-runner
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_TYPE=gpt4all
+      - MODEL_PATH=/models/gpt4all.bin
+    volumes:
+      - ./models:/models
+    networks:
+      - opennet
+
+  tts-service:
+    build: ./tts-service
+    ports:
+      - "5100:5100"
+    networks:
+      - opennet
+
+volumes:
+  pgdata:
+
+networks:
+  opennet:
+    driver: bridge

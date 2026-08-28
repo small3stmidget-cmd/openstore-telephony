@@ -1,0 +1,17 @@
+version: "3.0"
+
+intents:
+  - is_open
+  - hours
+  - connect_agent
+
+responses:
+  utter_open:
+  - text: "The store is open now. Would you like to be connected to an agent?"
+
+  utter_closed:
+  - text: "Sorry, the store is currently closed. Our hours are 09:00 to 18:00."
+
+  utter_hours:
+  - text: "Our hours are 09:00 to 18:00 local time."
+

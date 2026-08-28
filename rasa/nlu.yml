@@ -1,0 +1,18 @@
+version: "3.0"
+
+nlu:
+- intent: is_open
+  examples: |
+    - Is the store open?
+    - Are you open now?
+    - Is the shop currently open?
+
+- intent: hours
+  examples: |
+    - What are your hours?
+    - When do you open?
+
+- intent: connect_agent
+  examples: |
+    - Connect me to an agent
+    - I want to speak to someone
